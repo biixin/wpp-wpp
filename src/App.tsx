@@ -88,35 +88,42 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-white overflow-hidden">
-      <WhatsAppHeader
-        onPhoneClick={() => setIsCallActive(true)}
-        onVideoClick={() => setIsCallActive(true)}
-      />
+    <div className="fixed inset-0 flex flex-col bg-white" style={{ width: '100vw', height: '100vh', maxHeight: '-webkit-fill-available' }}>
+      <div className="flex-shrink-0">
+        <WhatsAppHeader
+          onPhoneClick={() => setIsCallActive(true)}
+          onVideoClick={() => setIsCallActive(true)}
+        />
+      </div>
 
       <div
-        className="flex-1 overflow-y-auto px-4 py-4"
+        className="flex-1 overflow-y-auto overflow-x-hidden"
         style={{
           backgroundImage: `url("${chatConfig.chatBackground}")`,
           backgroundSize: 'contain',
           backgroundAttachment: 'fixed',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          WebkitOverflowScrolling: 'touch'
         }}
       >
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
-        ))}
+        <div className="px-4 py-4">
+          {messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))}
 
-        {isTyping && <TypingIndicator />}
+          {isTyping && <TypingIndicator />}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
-      <MessageInput
-        onSendMessage={handleLeadMessage}
-        onSendAudio={handleSendAudio}
-        onSendImage={handleSendImage}
-      />
+      <div className="flex-shrink-0">
+        <MessageInput
+          onSendMessage={handleLeadMessage}
+          onSendAudio={handleSendAudio}
+          onSendImage={handleSendImage}
+        />
+      </div>
     </div>
   );
 }
