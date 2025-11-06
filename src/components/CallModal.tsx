@@ -56,7 +56,7 @@ export default function CallModal({ onClose }: CallModalProps) {
           style={{ backgroundColor: '#1F2937' }}
           className="w-10 h-10 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors"
         >
-          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><title>ionicons-v5-a</title><polyline points="244 400 100 256 244 112" style={{ fill: 'none', stroke: '#ffffff', strokeLinecap: 'square', strokeMiterlimit: 10, strokeWidth: '48px' }}></polyline><line x1="120" y1="256" x2="412" y2="256" style={{ fill: 'none', stroke: '#ffffff', strokeLinecap: 'square', strokeMiterlimit: 10, strokeWidth: '48px' }}></line></g></svg>
+          <svg style={{width: '25px'}} viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><title>ionicons-v5-a</title><polyline points="244 400 100 256 244 112" style={{ fill: 'none', stroke: '#ffffff', strokeLinecap: 'square', strokeMiterlimit: 10, strokeWidth: '48px' }}></polyline><line x1="120" y1="256" x2="412" y2="256" style={{ fill: 'none', stroke: '#ffffff', strokeLinecap: 'square', strokeMiterlimit: 10, strokeWidth: '48px' }}></line></g></svg>
         </button>
 
         <div className="text-white text-center">
@@ -68,8 +68,8 @@ export default function CallModal({ onClose }: CallModalProps) {
           <img
             src="https://console-typebot-minio.kjufc9.easypanel.host/api/v1/buckets/hot-mj/objects/download?preview=true&prefix=adicionar-amig-png.png&version_id=null"
             alt="Add friend"
-            width="24"
-            height="24"
+            width="23"
+            height="23"
           />
         </button>
       </div>
@@ -85,7 +85,7 @@ export default function CallModal({ onClose }: CallModalProps) {
         </div>
       </div>
 
-      <div className="bg-black/50 backdrop-blur-sm mx-4 mb-5 bg-[#111B20] rounded-[10px] p-[10px]">
+      <div style="margin-bottom: 20px;" className="bg-black/50 backdrop-blur-sm mx-4 bg-[#111B20] rounded-[10px] p-[10px]">
         <div className="flex justify-center gap-3 sm:gap-6 px-2">
           <button
             onClick={() => setShowKeypad(!showKeypad)}

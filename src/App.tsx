@@ -5,6 +5,8 @@ import MessageBubble from './components/MessageBubble';
 import TypingIndicator from './components/TypingIndicator';
 import MessageInput from './components/MessageInput';
 import CallModal from './components/CallModal';
+import PaymentButtons from './components/PaymentButtons';
+import PixPayment from './components/PixPayment';
 import { useFunnel } from './hooks/useFunnel';
 import { chatConfig } from './config';
 
@@ -12,6 +14,7 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isCallActive, setIsCallActive] = useState(false);
+  const [typingStatus, setTypingStatus] = useState<'online' | 'digitando..' | 'gravando audio..'>('online');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -22,7 +25,7 @@ function App() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const addMessage = (content: string, type: 'text' | 'image' | 'audio', mediaUrl?: string, audioDuration?: number, isFromLead: boolean = true) => {
+  const addMessage = (content: string, type: 'text' | 'image' | 'audio' | 'payment_buttons' | 'pix_payment', mediaUrl?: string, audioDuration?: number, isFromLead: boolean = true, pixData?: { qrcodeImage: string; qrcode: string }) => {
     const newMessage: Message = {
       id: crypto.randomUUID(),
       content,
@@ -32,7 +35,8 @@ function App() {
       is_from_lead: isFromLead,
       read: false,
       read_status: isFromLead ? 'sending' : 'delivered',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      pix_data: pixData
     };
 
     setMessages(prev => [...prev, newMessage]);
@@ -56,10 +60,21 @@ function App() {
     addMessage(content, type, mediaUrl, audioDuration, false);
   };
 
-  const { onLeadReply } = useFunnel({
+  const handleShowPaymentButtons = () => {
+    addMessage('', 'payment_buttons', undefined, undefined, false);
+  };
+
+  const handleShowPixPayment = (qrcodeImage: string, qrcode: string) => {
+    addMessage('', 'pix_payment', undefined, undefined, false, { qrcodeImage, qrcode });
+  };
+
+  const { onLeadReply, onPaymentAmountSelected } = useFunnel({
     onTypingStart: () => setIsTyping(true),
     onTypingEnd: () => setIsTyping(false),
-    onSendMessage: handleBotMessage
+    onSendMessage: handleBotMessage,
+    onShowPaymentButtons: handleShowPaymentButtons,
+    onShowPixPayment: handleShowPixPayment,
+    onStatusChange: (status) => setTypingStatus(status)
   });
 
   const handleLeadMessage = (content: string, type: 'text') => {
@@ -93,6 +108,7 @@ function App() {
         <WhatsAppHeader
           onPhoneClick={() => setIsCallActive(true)}
           onVideoClick={() => setIsCallActive(true)}
+          status={typingStatus}
         />
       </div>
 
@@ -107,9 +123,21 @@ function App() {
         }}
       >
         <div className="px-4 py-4">
-          {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
-          ))}
+          {messages.map((message) => {
+            if (message.type === 'payment_buttons') {
+              return <PaymentButtons key={message.id} onSelectAmount={onPaymentAmountSelected} />;
+            }
+            if (message.type === 'pix_payment' && message.pix_data) {
+              return (
+                <PixPayment
+                  key={message.id}
+                  qrcodeImage={message.pix_data.qrcodeImage}
+                  qrcode={message.pix_data.qrcode}
+                />
+              );
+            }
+            return <MessageBubble key={message.id} message={message} />;
+          })}
 
           {isTyping && <TypingIndicator />}
 
